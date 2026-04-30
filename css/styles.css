@@ -1,0 +1,286 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --color-primary: #2563eb;
+    --color-primary-light: #eff6ff;
+    --color-border: #8c8c8c;
+    --color-cell-border: #a0a0a0;
+    --color-header-bg: #e4f0f5;
+    --color-zebra: #edeeef;
+    --color-white: #ffffff;
+    --color-text: #1f2937;
+    --radius: 8px;
+    --container-max: 900px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: #f5f7fa;
+    color: var(--color-text);
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; 
+}
+
+.page-header {
+    background: var(--color-white);
+    padding: 1rem 1.5rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.page-header h1 {
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--color-primary);
+}
+
+.container {
+    max-width: var(--container-max);
+    margin: 2rem auto;
+    padding: 0 1rem;
+    flex: 1;
+}
+
+/* Панель управления */
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--color-white);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.control-group label {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+select {
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    border: 1px solid var(--color-border);
+    background: var(--color-white);
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+/* Степпер */
+.stepper {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.stepper-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--color-border);
+    background: var(--color-white);
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.stepper-btn:hover {
+    background: var(--color-primary-light);
+}
+
+.stepper-value {
+    min-width: 32px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+/* Обёртка таблицы для горизонтального скролла при необходимости */
+.table-wrapper {
+    overflow-x: auto;
+    margin: 0 auto;
+    max-width: 100%;
+}
+
+/* Таблица */
+.yahtzee-table {
+    border-collapse: collapse;
+    border: 2px solid var(--color-border);
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    min-width: 500px;
+    background: var(--color-white);
+}
+
+.yahtzee-table caption {
+    caption-side: bottom;
+    padding: 10px;
+    font-weight: 500;
+    color: #4b5563;
+}
+
+.yahtzee-table thead,
+.yahtzee-table tfoot {
+    background-color: var(--color-header-bg);
+}
+
+.yahtzee-table th,
+.yahtzee-table td {
+    border: 1px solid var(--color-cell-border);
+    padding: 8px 12px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.yahtzee-table td span {
+    font-size: 24px;
+    font-weight: bold;
+    vertical-align: middle;
+    line-height: 1;
+    display: inline-block;
+    position: relative;
+    top: -0.10em;
+}
+
+.yahtzee-table th {
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Выравнивание по левому краю для названий категорий */
+.yahtzee-table td:first-child {
+    text-align: left;
+    font-weight: 500;
+}
+
+/* Чередование строк */
+.yahtzee-table tbody tr:nth-of-type(even) {
+    background-color: var(--color-zebra);
+}
+
+/* Подсвеченные итоговые строки */
+.yahtzee-table .section-total-row {
+    background-color: #f0f4f8 !important;
+}
+
+.yahtzee-table .section-total-row td {
+    font-weight: 700;
+    border-top-width: 2px;
+}
+
+/* Разделитель между секциями (строка с заголовком) */
+.yahtzee-table .section-header td {
+    font-weight: 700;
+    background-color: #dbeafe;
+    padding: 6px 12px;
+    letter-spacing: 1px;
+}
+
+/* Input для ввода очков */
+.yahtzee-table input[type="number"] {
+    width: 70px;
+    padding: 4px 6px;
+    text-align: center;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    transition: border-color 0.2s;
+}
+
+.yahtzee-table input[type="number"]:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+/* Скрытие стрелок в number-поле */
+.yahtzee-table input[type="number"]::-webkit-outer-spin-button,
+.yahtzee-table input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.yahtzee-table input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* Кнопка сброса */
+.btn-reset {
+    padding: 0.5rem 1.2rem;
+    background: #f9fafb;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-reset:hover {
+    background: #fee2e2;
+    border-color: #fca5a5;
+}
+
+/* Редактируемое имя игрока в шапке */
+.player-name {
+    cursor: pointer;
+    border-bottom: 1px dashed transparent;
+    padding: 2px 4px;
+    transition: border-color 0.2s;
+}
+
+.player-name:hover {
+    border-bottom-color: var(--color-primary);
+}
+
+.player-name-edit {
+    width: 100px;
+    padding: 2px 6px;
+    font-weight: 600;
+    text-align: center;
+    border: 1px solid var(--color-primary);
+    border-radius: 4px;
+    outline: none;
+    font-size: 0.9rem;
+}
+
+/* Адаптивность */
+@media (max-width: 600px) {
+    .controls {
+        gap: 1rem;
+        flex-direction: row;
+        align-items: first baseline;
+    }
+    .yahtzee-table {
+        font-size: 0.75rem;
+    }
+    .yahtzee-table input[type="number"] {
+        width: 50px;
+    }
+    .yahtzee-table td span {
+        display: none;
+    }
+}

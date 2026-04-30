@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Yahtzee — азартная игра в кости. Для игры используют 5 кубиков с числовыми достоинствами от 1 до 6. В зависимости от игровой ситуации выбрасываются от одного до пяти кубиков одновременно.">
+        <meta name="keywords" content="Yahtzee, Покер на костях, игра в кости">
+        <meta name="author" content="M.Price">
+        <meta name="robots" content="index">
+        <link rel="canonical" href="https://mihailpreis.github.io/Yahtzee/">
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="Yahtzee">
+        <meta property="og:description" content="Yahtzee — азартная игра в кости. Для игры используют 5 кубиков с числовыми достоинствами от 1 до 6. В зависимости от игровой ситуации выбрасываются от одного до пяти кубиков одновременно.">
+        <meta property="og:image" content="https://mihailpreis.github.io/Yahtzee/images/splash.jpg">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="818">
+        <meta property="og:url" content="https://mihailpreis.github.io/Yahtzee/">
+        <meta property="og:locale" content="ru_RU">
+        <link rel="icon" type="image/png" href="images/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/svg+xml" href="images/favicon.svg" />
+        <link rel="shortcut icon" href="images/favicon.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png" />
+        <meta name="apple-mobile-web-app-title" content="Yahtzee" />
+        <link rel="manifest" href="site.webmanifest" />
+        <link rel="stylesheet" href="css/styles.css" media="screen">
+        <script src="js/script.js" defer></script>
+        <title>Yahtzee</title>
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-B1JTKVDNW6"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
+            gtag('config', 'G-B1JTKVDNW6');
+        </script>
+    </head>
+
+    <body>
+
+        <header class="page-header">
+            <h1>Yahtzee</h1>
+        </header>
+
+        <main class="container">
+            <div class="table-wrapper" id="table-container"></div>
+
+            <div class="controls">
+                <div class="control-group">
+                    <label for="config-select">Правила:</label>
+                    <select id="config-select"></select>
+                </div>
+                <div class="control-group">
+                    <label>👤</label>
+                    <div class="stepper" id="player-stepper">
+                        <button type="button" class="stepper-btn" id="decrement" aria-label="Уменьшить количество игроков">−</button>
+                        <span class="stepper-value" id="player-count-display">2</span>
+                        <button type="button" class="stepper-btn" id="increment" aria-label="Увеличить количество игроков">+</button>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <button type="button" id="reset-scores" class="btn-reset">Сбросить</button>
+                </div>
+            </div>
+        </main>
+
+    </body>
+
+</html>

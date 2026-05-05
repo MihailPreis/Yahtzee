@@ -124,6 +124,7 @@ const playerDecrementBtn = document.getElementById('decrement');
 const playerIncrementBtn = document.getElementById('increment');
 const playerCountDisplay = document.getElementById('player-count-display');
 const resetBtn = document.getElementById('reset-scores');
+const fullscreenBtn = document.getElementById('fullscreen-btn');
 const tableContainer = document.getElementById('table-container');
 
 // ========== 4. ИНИЦИАЛИЗАЦИЯ ==========
@@ -242,32 +243,47 @@ function renderTable() {
     const config = getConfig();
     const playerCount = state.playerCount;
 
-    let html = '<table class="yahtzee-table">';
-    html += `<caption>Вводите очки после каждого броска — итоги пересчитываются автоматически.</caption>`;
+    let html = '<table class="table table-sm">';
 
     // Шапка
-    html += '<thead><tr><th scope="col"></th><th scope="col">Очки</th>';
+    html += `
+    <thead>
+        <tr class="table-primary">
+            <th scope="col"></th>
+            <th scope="col">Очки</th>
+    `;
     for (let i = 1; i <= playerCount; i++) {
-        html += `<th scope="col"><span class="player-name" data-player-index="${i - 1}" title="Двойной клик — переименовать">${escapeHtml(state.players[i - 1]?.name || `Игрок ${i}`)}</span></th>`;
+        html += `
+        <th scope="col">
+            <input class="form-control form-control-sm" type="text" data-player="${i - 1}" value="${escapeHtml(state.players[i - 1]?.name || `Игрок ${i}`)}">
+        </th>
+        `;
     }
-    html += '</tr></thead>';
+    html += `
+        </tr>
+    </thead>
+    `;
 
     // Тело
     html += '<tbody>';
     config.sections.forEach(section => {
         section.rows.forEach(row => {
             if (row.type === 'computed' || row.key.includes('Total')) {
-                html += `<tr class="section-header">`;
+                html += `<tr class="table-info">`;
+                html += `<th>${row.label}</th>`;
             } else {
                 html += '<tr>';
+                html += `<td>${row.label}</td>`;
             }
-            html += `<td>${row.label}</td>`;
             html += `<td>${row.desc}</td>`;
             for (let p = 0; p < playerCount; p++) {
                 if (row.type === 'score') {
                     // Поле ввода
                     const value = state.players[p]?.[row.key] ?? '';
-                    html += `<td><input type="number" min="0" max="99" data-player="${p}" data-key="${row.key}" value="${value}"></td>`;
+                    html += `
+                    <td>
+                        <input class="form-control form-control-sm" type="number" min="0" max="99" data-player="${p}" data-key="${row.key}" value="${value}" style="width: 55px">
+                    </td>`;
                 } else {
                     // Вычисляемое поле
                     const value = state.players[p]?.[row.key] ?? 0;
@@ -277,14 +293,20 @@ function renderTable() {
             html += '</tr>';
         });
     });
-    html += '</tbody>';
-    html += '</table>';
+    html += `
+        </tbody>
+    </table>
+    `;
 
     tableContainer.innerHTML = html;
 
     // Навешиваем обработчики на все инпуты
-    document.querySelectorAll('.yahtzee-table input[type="number"]').forEach(input => {
+    document.querySelectorAll('.table input[type="number"]').forEach(input => {
         input.addEventListener('input', handleScoreInput);
+    });
+    document.querySelectorAll('.table input[type="text"]').forEach(input => {
+        input.addEventListener('input', handleUserNameInput);
+        input.addEventListener('blur', handleUserNameBlur);
     });
 }
 
@@ -310,7 +332,7 @@ function handleScoreInput(event) {
         return;
     }
 
-    if (value) {
+    if (value !== null) {
         value = Math.max(0, Math.min(value, 99))
         input.value = value
     }
@@ -319,6 +341,22 @@ function handleScoreInput(event) {
     recalcAll();
     saveState();
     updateResetButton();
+}
+
+function handleUserNameInput(event) {
+    const input = event.target;
+    const playerIdx = parseInt(input.dataset.player, 10);
+    state.players[playerIdx].name = input.value.trim();
+}
+
+function handleUserNameBlur(event) {
+    const input = event.target;
+    const playerIdx = parseInt(input.dataset.player, 10);
+    if (!input.value.trim()) {
+        const defaultName = `Игрок ${playerIdx + 1}`;
+        state.players[playerIdx].name = defaultName;
+        input.value = defaultName;
+    }
 }
 
 function changePlayerCount(delta) {
@@ -367,10 +405,7 @@ function resetGame() {
     initializePlayers(2);
     playerCountDisplay.textContent = state.playerCount;
     configSelect.value = state.currentConfigKey;
-    renderTable();
-    recalcAll();
-    saveState();
-    updateResetButton();
+    resetAll();
 }
 
 function resetButtonAction() {
@@ -379,7 +414,6 @@ function resetButtonAction() {
     } else {
         resetGame();
     }
-    updateResetButton();
 }
 
 function updateResetButton() {
@@ -418,59 +452,11 @@ document.addEventListener('DOMContentLoaded', () => {
     playerIncrementBtn.addEventListener('click', () => changePlayerCount(1));
     resetBtn.addEventListener('click', () => resetButtonAction());
 
-    // Переименование игроков через двойной клик
-    tableContainer.addEventListener('dblclick', (e) => {
-        const span = e.target.closest('.player-name');
-        if (!span) return;
-        const playerIdx = parseInt(span.dataset.playerIndex, 10);
-        const currentName = state.players[playerIdx]?.name || `Игрок ${playerIdx + 1}`;
-
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.value = currentName;
-        input.className = 'player-name-edit';
-        input.setAttribute('aria-label', 'Имя игрока');
-        span.replaceWith(input);
-        input.focus();
-        input.select();
-
-        let finished = false;
-
-        const finishEdit = () => {
-            if (finished) return;
-            finished = true;
-            let newName = input.value.trim();
-            if (!newName) newName = currentName;
-            state.players[playerIdx].name = newName;
-            if (document.body.contains(input)) {
-                const newSpan = document.createElement('span');
-                newSpan.className = 'player-name';
-                newSpan.dataset.playerIndex = playerIdx;
-                newSpan.title = 'Двойной клик — переименовать';
-                newSpan.textContent = newName;
-                input.replaceWith(newSpan);
-            }
-            saveState();
-        };
-
-        input.addEventListener('blur', finishEdit);
-        input.addEventListener('keydown', (ke) => {
-            if (ke.key === 'Enter') {
-                ke.preventDefault();
-                finishEdit();
-            } else if (ke.key === 'Escape') {
-                if (finished) return;
-                finished = true;
-                if (document.body.contains(input)) {
-                    const newSpan = document.createElement('span');
-                    newSpan.className = 'player-name';
-                    newSpan.dataset.playerIndex = playerIdx;
-                    newSpan.title = 'Двойной клик — переименовать';
-                    newSpan.textContent = currentName; // восстанавливаем старое имя
-                    input.replaceWith(newSpan);
-                }
-                saveState();
-            }
-        });
+    fullscreenBtn.addEventListener('click', () => {
+        if (document.fullscreenElement) {
+            document.exitFullscreen();
+        } else {
+            document.body.requestFullscreen();
+        }
     });
 });
